@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Interactivo</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #111;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .quiz-container {
+            text-align: center;
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: #facc15;
+            color: #111;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+        .button:hover {
+            background-color: #fde047;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>¡Bienvenido al Quiz Interactivo!</h1>
+        <input id="playerName" placeholder="Ingresa tu nombre">
+        <button id="joinBtn" class="button">Unirse al juego</button>
+        <div id="question-container" style="display:none;">
+            <h2 id="question"></h2>
+            <div id="answers"></div>
+        </div>
+        <h2 id="score" style="display:none;"></h2>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let playerName;
+
+        document.getElementById("joinBtn").onclick = () => {
+            playerName = document.getElementById("playerName").value;
+            socket.emit("join", playerName);
+            document.getElementById("question-container").style.display = "block";
+            document.getElementById("score").style.display = "block";
+        };
+
+        socket.on("playersUpdate", (players) => {
+            // Mostrar jugadores conectados
+            console.log(players);
+        });
+
+        socket.on("updateScore", (players) => {
+            // Actualiza el puntaje en tiempo real
+            const player = players.find(p => p.name === playerName);
+            document.getElementById("score").innerText = `Tu Puntaje: ${player.score}`;
+        });
+    </script>
+</body>
+</html>
