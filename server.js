@@ -40,6 +40,11 @@ function checkAnswer(answerIndex) {
   return answerIndex === correctAnswerIndex;
 }
 
-server.listen(3000, () => {
-  console.log("Servidor corriendo en http://localhost:3000");
+const port = process.env.PORT || 3000;  // Usa el puerto proporcionado por Heroku, o 3000 en desarrollo.
+server.listen(port, () => {
+  console.log(`Servidor corriendo en http://localhost:${port}`);
 });
+
+// server.listen(3000, () => {
+//   console.log("Servidor corriendo en http://localhost:3000");
+// });
